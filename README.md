@@ -17,8 +17,8 @@ A Streamlit-based technical intelligence layer for NSE stocks:
 
 1. Clone and enter project:
    ```bash
-   git clone <your_repo_url>
-   cd et_markets_chart_intel
+   git clone <repo_url>
+   cd ET_AI_Hackathon_2026_Three-Neurons-Short
    ```
 
 2. Install deps:
