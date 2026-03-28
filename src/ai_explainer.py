@@ -13,7 +13,7 @@ def get_gemini_explanation(symbol: str, pattern_result: dict, backtest_result: d
 
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.0-flash")
 
         prompt = f"""
 You are a financial market assistant for Indian retail investors.
