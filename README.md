@@ -42,9 +42,9 @@ A Streamlit-based technical intelligence layer for NSE stocks:
 - Backtests here are simplified and educational, not production-grade strategy research.
 - This is not investment advice.
 
-## Next Improvements (Recommended)
-- Add full NSE universe scanner + alert ranking
-- Add more robust pattern library:
+## Next Improvements
+- Addition of full NSE universe scanner + alert ranking
+- Addition of more robust pattern library:
   - Ascending triangle, double top/bottom, MACD divergences
 - Multi-timeframe confirmation logic
 - Better walk-forward backtesting and transaction cost modeling
