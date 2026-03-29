@@ -1,10 +1,8 @@
 import pandas as pd
 import numpy as np
 
+
 def _local_extrema(series: pd.Series, order: int = 5):
-    """
-    Simple local maxima/minima finder without heavy dependencies.
-    """
     arr = series.values
     maxima, minima = [], []
     for i in range(order, len(arr) - order):
@@ -15,10 +13,8 @@ def _local_extrema(series: pd.Series, order: int = 5):
             minima.append(i)
     return maxima, minima
 
+
 def detect_breakout_20d(df: pd.DataFrame) -> dict:
-    """
-    Breakout when today's close > previous 20-day high with strong volume.
-    """
     d = df.copy()
     d["PREV_20D_HIGH"] = d["High"].rolling(20).max().shift(1)
     d["VOL20"] = d["Volume"].rolling(20).mean()
@@ -45,10 +41,8 @@ def detect_breakout_20d(df: pd.DataFrame) -> dict:
         }
     }
 
+
 def detect_reversal_rsi(df: pd.DataFrame) -> dict:
-    """
-    Bullish reversal: RSI crossing above 30 from below + close above EMA20.
-    """
     if len(df) < 25:
         return {"triggered": False, "pattern": "RSI_REVERSAL"}
 
@@ -76,10 +70,8 @@ def detect_reversal_rsi(df: pd.DataFrame) -> dict:
         }
     }
 
+
 def detect_support_resistance_touch(df: pd.DataFrame, lookback: int = 120) -> dict:
-    """
-    Detect if current close is near inferred support/resistance from local extrema.
-    """
     if len(df) < lookback + 20:
         return {"triggered": False, "pattern": "SUPPORT_RESISTANCE_TOUCH"}
 
@@ -110,6 +102,7 @@ def detect_support_resistance_touch(df: pd.DataFrame, lookback: int = 120) -> di
             "zone": zone
         }
     }
+
 
 def run_all_pattern_detectors(df: pd.DataFrame):
     results = []
