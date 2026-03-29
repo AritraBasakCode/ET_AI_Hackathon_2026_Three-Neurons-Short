@@ -17,7 +17,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111%2B-009688?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 [![NSE](https://img.shields.io/badge/Exchange-NSE%20India-orange?style=flat-square)](https://nseindia.com)
-[![Gemini](https://img.shields.io/badge/AI-Gemini%202.0%20Flash-4285F4?style=flat-square&logo=google)](https://ai.google.dev)
+[![Gemini](https://img.shields.io/badge/AI-Gemini%202.5%20Flash-4285F4?style=flat-square&logo=google)](https://ai.google.dev)
 
 </div>
 
@@ -78,7 +78,7 @@ Each triggered pattern is backtested automatically against the full historical d
 - Parameter-aware results (hold days, target %)
 
 ### 🤖 Gemini AI Insight Engine
-When a pattern triggers, the Gemini 2.0 Flash model generates structured analysis with five components:
+When a pattern triggers, the Gemini 2.5 Flash model generates structured analysis with five components:
 - **Summary** — one-sentence headline
 - **What Happened** — technical description of the signal
 - **Why It Matters** — market significance and context
@@ -124,7 +124,7 @@ Rolling window scan across the last N bars (configurable 10–60) finds every hi
            ▼                          ▼
   ┌─────────────────┐      ┌──────────────────────┐
   │   Yahoo Finance │      │   Google Gemini API  │
-  │   (yfinance)    │      │   gemini-2.0-flash   │
+  │   (yfinance)    │      │   gemini-2.5-flash   │
   │   NSE/BSE OHLCV │      │   Structured JSON AI │
   └─────────────────┘      └──────────────────────┘
 ```
@@ -137,7 +137,7 @@ Rolling window scan across the last N bars (configurable 10–60) finds every hi
 |---|---|
 | **Backend** | Python 3.10+, FastAPI, Uvicorn |
 | **Data** | yfinance (Yahoo Finance), pandas, numpy |
-| **AI** | Google Gemini 2.0 Flash via `google-generativeai` |
+| **AI** | Google Gemini 2.5 Flash via `google-generativeai` |
 | **Frontend** | Vanilla HTML5 / CSS3 / JavaScript (ES2022) |
 | **Charts** | TradingView Lightweight Charts v4 (CDN) |
 | **Fonts** | Syne (display) + JetBrains Mono (data) via Google Fonts |
@@ -494,7 +494,7 @@ For each historical signal at bar i:
 
 ## AI Insight Engine
 
-When a pattern triggers, PatternIQ calls **Gemini 2.0 Flash** with a structured prompt requesting a JSON response in the following schema:
+When a pattern triggers, PatternIQ calls **Gemini 2.5 Flash** with a structured prompt requesting a JSON response in the following schema:
 
 ```json
 {
