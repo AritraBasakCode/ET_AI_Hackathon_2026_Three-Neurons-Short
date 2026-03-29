@@ -117,8 +117,8 @@ Rolling window scan across the last N bars (configurable 10–60) finds every hi
 │                    ──► NaN sanitization                 │
 │                    ──► JSON response                    │
 │                                                         │
-│  GET  /           ──► static/index.html                 │
-│  GET  /api/health ──► {"status": "ok"}                  │
+│  GET  /            ──► static/index.html                │
+│  GET  /api/health  ──► {"status": "ok"}                 │
 └──────────┬──────────────────────────┬───────────────────┘
            │                          │
            ▼                          ▼
