@@ -572,8 +572,6 @@ Hard-refresh the browser: `Ctrl+Shift+R` (Windows/Linux) or `Cmd+Shift+R` (Mac) 
 
 <div align="center">
 
-Built with ⚡ for the **ET Markets AI Hackathon 2026**
-
 **Team Three Neurons Short**
 
 </div>
