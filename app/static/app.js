@@ -360,3 +360,101 @@ async function run() {
 $('runBtn').addEventListener('click', run);
 $('symbolInput').addEventListener('keydown', e => { if (e.key === 'Enter') run(); });
 window.addEventListener('load', initCharts);
+
+// ═══════════════════════════════════════════════
+//  Drag-to-resize: chart pane vs signal pane
+// ═══════════════════════════════════════════════
+(function initDrag() {
+  const handle   = $('dragHandle');
+  const center   = handle.closest('.center');
+  const chartWrap = center.querySelector('.chart-wrap');
+
+  // Header height (52px) + drag handle (10px)
+  const HEADER_H   = 52;
+  const HANDLE_H   = 10;
+  const MIN_CHART  = 160;   // px — minimum chart pane height
+  const MIN_SIGNAL = 120;   // px — minimum signal pane height
+
+  // Restore saved split from localStorage
+  const STORAGE_KEY = 'patterniq_chart_split';
+  function applyHeight(h) {
+    document.documentElement.style.setProperty('--chart-pane-h', h + 'px');
+    chartWrap.style.height = h + 'px';
+    // Resize lightweight-charts to fit
+    if (priceChart) {
+      const priceH = Math.max(60, h - 120);
+      $('priceChart').style.height = priceH + 'px';
+      priceChart.applyOptions({ height: priceH });
+      volChart.applyOptions({ height: 68 });
+    }
+  }
+
+  const saved = parseInt(localStorage.getItem(STORAGE_KEY));
+  if (saved && saved > MIN_CHART) applyHeight(saved);
+
+  let dragging = false;
+  let startY   = 0;
+  let startH   = 0;
+
+  handle.addEventListener('mousedown', e => {
+    e.preventDefault();
+    dragging  = true;
+    startY    = e.clientY;
+    startH    = chartWrap.getBoundingClientRect().height;
+    handle.classList.add('dragging');
+    document.body.style.cursor = 'ns-resize';
+    document.body.style.userSelect = 'none';
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const delta      = e.clientY - startY;
+    const totalH     = center.getBoundingClientRect().height;
+    const maxChart   = totalH - HANDLE_H - MIN_SIGNAL;
+    const newH       = Math.min(maxChart, Math.max(MIN_CHART, startH + delta));
+    applyHeight(newH);
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove('dragging');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+    // Persist
+    const h = chartWrap.getBoundingClientRect().height;
+    localStorage.setItem(STORAGE_KEY, Math.round(h));
+  });
+
+  // Touch support
+  handle.addEventListener('touchstart', e => {
+    dragging = true;
+    startY   = e.touches[0].clientY;
+    startH   = chartWrap.getBoundingClientRect().height;
+    handle.classList.add('dragging');
+  }, { passive: true });
+
+  document.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    const delta    = e.touches[0].clientY - startY;
+    const totalH   = center.getBoundingClientRect().height;
+    const maxChart = totalH - HANDLE_H - MIN_SIGNAL;
+    const newH     = Math.min(maxChart, Math.max(MIN_CHART, startH + delta));
+    applyHeight(newH);
+  }, { passive: true });
+
+  document.addEventListener('touchend', () => {
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove('dragging');
+    localStorage.setItem(STORAGE_KEY, Math.round(chartWrap.getBoundingClientRect().height));
+  });
+
+  // Double-click to reset to default 50/50
+  handle.addEventListener('dblclick', () => {
+    const totalH  = center.getBoundingClientRect().height;
+    const defaultH = Math.round((totalH - HANDLE_H) * 0.5);
+    applyHeight(defaultH);
+    localStorage.setItem(STORAGE_KEY, defaultH);
+  });
+})();
