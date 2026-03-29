@@ -100,16 +100,16 @@ Rolling window scan across the last N bars (configurable 10–60) finds every hi
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                     Browser Client                       │
+│                     Browser Client                      │
 │  index.html + style.css + app.js                        │
-│  Lightweight Charts  ←→  Fetch API  ←→  DOM Renderer   │
+│  Lightweight Charts  ←→  Fetch API  ←→  DOM Renderer    │
 └─────────────────┬───────────────────────────────────────┘
                   │  HTTP POST /api/analyze
                   ▼
 ┌─────────────────────────────────────────────────────────┐
-│                  FastAPI Server (main.py)                │
+│                  FastAPI Server (main.py)               │
 │                                                         │
-│  POST /api/analyze ──► fetch_ohlcv()                   │
+│  POST /api/analyze ──► fetch_ohlcv()                    │
 │                    ──► add_indicators()                 │
 │                    ──► run_all_pattern_detectors()      │
 │                    ──► backtest_*()                     │
@@ -117,15 +117,15 @@ Rolling window scan across the last N bars (configurable 10–60) finds every hi
 │                    ──► NaN sanitization                 │
 │                    ──► JSON response                    │
 │                                                         │
-│  GET  /           ──► static/index.html                │
-│  GET  /api/health ──► {"status": "ok"}                 │
+│  GET  /           ──► static/index.html                 │
+│  GET  /api/health ──► {"status": "ok"}                  │
 └──────────┬──────────────────────────┬───────────────────┘
            │                          │
            ▼                          ▼
   ┌─────────────────┐      ┌──────────────────────┐
-  │   Yahoo Finance  │      │   Google Gemini API   │
-  │   (yfinance)     │      │   gemini-2.0-flash    │
-  │   NSE/BSE OHLCV  │      │   Structured JSON AI  │
+  │   Yahoo Finance │      │   Google Gemini API  │
+  │   (yfinance)    │      │   gemini-2.0-flash   │
+  │   NSE/BSE OHLCV │      │   Structured JSON AI │
   └─────────────────┘      └──────────────────────┘
 ```
 
