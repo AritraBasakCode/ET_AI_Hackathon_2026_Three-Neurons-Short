@@ -1,6 +1,12 @@
 import os
 import json
 import google.generativeai as genai
+from dotenv import load_dotenv
+from pathlib import Path
+
+# Load environment variables from .env file in app directory
+env_path = Path(__file__).parent.parent / ".env"
+load_dotenv(dotenv_path=env_path, override=True)
 
 
 def get_gemini_explanation(symbol: str, pattern_result: dict, backtest_result: dict) -> dict:
@@ -9,9 +15,16 @@ def get_gemini_explanation(symbol: str, pattern_result: dict, backtest_result: d
       summary, what_happened, why_it_matters, risk_caution, backtest_context
     Falls back to a plain string under key 'raw' if parsing fails.
     """
-    api_key = "AIzaSyB2g-KW3pBlRNi79v_Oed5YUm00UYKK7Uc"
+    
+    # Get API key fresh each call to ensure it's loaded
+    api_key = os.getenv("GEMINI_API_KEY")
+    
     if not api_key:
-        return {"error": "Gemini API key not configured. Add GEMINI_API_KEY in .env to enable AI explanations."}
+        # Debug: show what we tried to load
+        env_file = Path(__file__).parent.parent / ".env"
+        return {
+            "error": f"Gemini API key not configured. Looked in: {env_file}. Add GEMINI_API_KEY in .env to enable AI explanations."
+        }
 
     try:
         genai.configure(api_key=api_key)

@@ -1,11 +1,18 @@
 import math
 import os
+from pathlib import Path
 import pandas as pd
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from dotenv import load_dotenv
+
+# Load environment variables BEFORE importing other modules
+env_path = Path(__file__).parent / ".env"
+load_dotenv(dotenv_path=env_path, override=True)
+
 from src.data_loader import fetch_ohlcv
 from src.indicators import add_indicators
 from src.patterns import run_all_pattern_detectors
@@ -13,9 +20,6 @@ from src.backtest import backtest_breakout_20d, backtest_rsi_reversal
 from src.ai_explainer import get_gemini_explanation
 from slowapi import Limiter
 from slowapi.util import get_remote_address
-from dotenv import load_dotenv
-
-load_dotenv()
 
 app = FastAPI(title="ET Markets - Chart Pattern Intelligence")
 

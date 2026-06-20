@@ -16,12 +16,11 @@ def _candidate_symbols(symbol: str):
     s = _normalize_symbol(symbol)
     base = s.split(".")[0]
     # Try multiple variations for NSE/BSE stocks
+    # Yahoo Finance primarily uses .NS for NSE
     candidates = [
-        f"{base}.NS",      # NSE
-        f"{base}.NSE",     # Alternative NSE format
+        f"{base}.NS",      # NSE (primary)
         f"{base}.BO",      # BSE
-        f"{base}.BSE",     # Alternative BSE format
-        base               # Plain symbol
+        base,               # Plain symbol
     ]
     # Remove duplicates while preserving order
     seen = set()
@@ -78,22 +77,28 @@ def fetch_ohlcv(symbol: str, period: str = "1y", interval: str = "1d") -> pd.Dat
     last_error = None
 
     for sym in candidates:
-        for attempt in range(3):
+        for attempt in range(5):  # Increased from 3 to 5 attempts
             try:
+                print(f"Attempt {attempt + 1}/5: Fetching {sym}...")
                 df = _history_with_ticker(sym, period, interval)
                 if not df.empty:
+                    print(f"✓ Success with {sym}")
                     df.attrs["resolved_symbol"] = sym
                     return df
 
                 df = _history_with_download(sym, period, interval)
                 if not df.empty:
+                    print(f"✓ Success with {sym}")
                     df.attrs["resolved_symbol"] = sym
                     return df
 
             except Exception as e:
                 last_error = e
+                print(f"✗ Failed: {sym} - {str(e)}")
 
-            time.sleep(0.8 * (attempt + 1))
+            # Increase delay between attempts: 1s, 2s, 3s, 4s, 5s
+            delay = 1.5 * (attempt + 1)
+            time.sleep(delay)
 
     msg = f"No data found for symbol: {symbol}. Tried: {', '.join(candidates)}"
     if last_error:
