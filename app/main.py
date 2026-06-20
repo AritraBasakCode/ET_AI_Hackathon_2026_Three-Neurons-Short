@@ -1,4 +1,5 @@
 import math
+import os
 import pandas as pd
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.staticfiles import StaticFiles
@@ -12,6 +13,9 @@ from src.backtest import backtest_breakout_20d, backtest_rsi_reversal
 from src.ai_explainer import get_gemini_explanation
 from slowapi import Limiter
 from slowapi.util import get_remote_address
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI(title="ET Markets - Chart Pattern Intelligence")
 
@@ -20,12 +24,12 @@ app.state.limiter = limiter
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
+    allow_origins=["http://localhost:8000"],
+    allow_methods=["POST", "GET"],
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="static", html=True), name="static")
 
 
 def _f(v):
