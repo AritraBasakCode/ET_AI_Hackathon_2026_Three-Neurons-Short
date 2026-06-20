@@ -9,7 +9,7 @@ def get_gemini_explanation(symbol: str, pattern_result: dict, backtest_result: d
       summary, what_happened, why_it_matters, risk_caution, backtest_context
     Falls back to a plain string under key 'raw' if parsing fails.
     """
-    api_key = os.getenv("GEMINI_API_KEY")
+    api_key = "AIzaSyB2g-KW3pBlRNi79v_Oed5YUm00UYKK7Uc"
     if not api_key:
         return {"error": "Gemini API key not configured. Add GEMINI_API_KEY in .env to enable AI explanations."}
 

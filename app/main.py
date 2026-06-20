@@ -1,18 +1,22 @@
 import math
 import pandas as pd
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
 from src.data_loader import fetch_ohlcv
 from src.indicators import add_indicators
 from src.patterns import run_all_pattern_detectors
 from src.backtest import backtest_breakout_20d, backtest_rsi_reversal
 from src.ai_explainer import get_gemini_explanation
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 app = FastAPI(title="ET Markets - Chart Pattern Intelligence")
+
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
 
 app.add_middleware(
     CORSMiddleware,
@@ -85,7 +89,8 @@ async def health():
     return {"status": "ok"}
 
 @app.post("/api/analyze")
-async def analyze(req: AnalysisRequest):
+@limiter.limit("10/minute")
+async def analyze(request: Request, req: AnalysisRequest):
     try:
         raw = fetch_ohlcv(symbol=req.symbol, period=req.period, interval=req.interval)
         df = add_indicators(raw).copy()
