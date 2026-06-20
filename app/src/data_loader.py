@@ -15,7 +15,17 @@ def _normalize_symbol(symbol: str) -> str:
 def _candidate_symbols(symbol: str):
     s = _normalize_symbol(symbol)
     base = s.split(".")[0]
-    return [f"{base}.NS", f"{base}.BO", base]
+    # Try multiple variations for NSE/BSE stocks
+    candidates = [
+        f"{base}.NS",      # NSE
+        f"{base}.NSE",     # Alternative NSE format
+        f"{base}.BO",      # BSE
+        f"{base}.BSE",     # Alternative BSE format
+        base               # Plain symbol
+    ]
+    # Remove duplicates while preserving order
+    seen = set()
+    return [x for x in candidates if not (x in seen or seen.add(x))]
 
 
 def _clean_df(df: pd.DataFrame) -> pd.DataFrame:
